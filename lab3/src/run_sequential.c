@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
     char *args[] = {"./sequential_min_max", argv[1], argv[2], NULL};
     execv(args[0], args);
     perror("execv");
-    _exit(1);
+    return 1;
   }
 
   // родитель ждёт завершения потомка
