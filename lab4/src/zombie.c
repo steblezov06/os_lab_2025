@@ -9,9 +9,6 @@
 #define MAX_CHILDREN 16
 
 static void mode_zombie(int n) {
-  printf("[zombie] Создаю %d детей и НЕ жну их.\n", n);
-  printf("[zombie] Родитель заснёт на 60 секунд.\n");
-  printf("[zombie] Открой другой терминал и запусти:\n");
   printf("           ps -eo pid,ppid,stat,cmd | grep zombie_demo\n");
   printf("         Состояние 'Z' или 'Z+' — это зомби.\n\n");
 
@@ -28,7 +25,7 @@ static void mode_zombie(int n) {
   }
 
   sleep(60);
-  printf("[zombie] Родитель завершился. Дети-зомби будут усыновлены init и исчезнут.\n");
+  printf("Родитель завершился. Дети-зомби будут усыновлены init и исчезнут.\n");
 }
 
 
@@ -51,11 +48,9 @@ static void mode_reap(int n) {
       printf("  пожнат ребёнок pid=%d, код=%d\n", done, WEXITSTATUS(status));
     }
   }
-  printf("[reap] Растения выиграли, зомби нет.\n");
 }
 
 static void mode_double(int n) {
-  printf("[double] Двойной fork: внуков усыновит init, зомби не будет.\n");
 
   for (int i = 0; i < n; i++) {
     pid_t pid = fork();
@@ -75,7 +70,6 @@ static void mode_double(int n) {
   if (errno != ECHILD) perror("wait");
 
   printf("[double] Все дети пожаты. Внуки живут с init и не станут зомби.\n");
-  printf("[double] Сплю 5 секунд — проверь ps.\n");
   sleep(5);
 }
 
