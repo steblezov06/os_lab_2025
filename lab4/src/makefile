@@ -17,10 +17,10 @@ libsum.a : sum.o
 	ar rcs libsum.a sum.o
 
 
-utils.o : utils.h
+utils.o : utils.h utils.c
 	$(CC) -o utils.o -c utils.c $(CFLAGS)
 
-sum.o : sum.h
+sum.o : sum.h sum.c
 	$(CC) -o sum.o -c sum.c $(CFLAGS)
 
 find_min_max.o : utils.h find_min_max.h

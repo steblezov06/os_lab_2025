@@ -193,7 +193,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < pnum; i++) close(pipes[i][1]);
   }
 
-  //Таймер запускается только если --timeout задан.
+
   
   if (timeout > 0) {
     signal(SIGALRM, alarm_handler);
@@ -201,10 +201,8 @@ int main(int argc, char **argv) {
   }
 
 
-  // Теперь: неблокирующий waitpid(WNOHANG) + проверка флага таймаута.
   bool kill_sent = false;
   while (active_child_processes > 0) {
-    // Таймаут истёк: посылаем SIGKILL всем ещё живым детям
     if (timeout_expired && !kill_sent) {
       for (int i = 0; i < pnum; i++) {
         if (alive[i]) kill(child_pids[i], SIGKILL);
@@ -217,7 +215,7 @@ int main(int argc, char **argv) {
     int status;
     pid_t finished = waitpid(-1, &status, WNOHANG);
     if (finished > 0) {
-      // определяем, какой ребёнок завершился и убит ли он
+      // определяем, какой ребёнок завершился
       for (int i = 0; i < pnum; i++) {
         if (child_pids[i] == finished) {
           alive[i] = false;
@@ -238,13 +236,13 @@ int main(int argc, char **argv) {
   struct MinMax min_max;
   min_max.min = INT_MAX;
   min_max.max = INT_MIN;
-  int results = 0;  // [ДОБАВЛЕНО] сколько детей реально вернули результат
+  int results = 0;  // 
 
   for (int i = 0; i < pnum; i++) {
     int min = INT_MAX;
     int max = INT_MIN;
 
-    // Убитый ребёнок результата не дал: чистим ресурсы, пропускаем
+    
     if (killed[i]) {
       if (with_files) unlink(filenames[i]);
       else close(pipes[i][0]);

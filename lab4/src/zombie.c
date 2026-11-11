@@ -8,7 +8,7 @@
 #define MAX_CHILDREN 16
 
 static void mode_zombie(int n) {
-  printf("           ps -eo pid,ppid,stat,cmd | grep zombie_demo\n");
+  printf("           ps -eo pid,ppid,stat,cmd | grep zombie\n");
   printf("         Состояние 'Z' или 'Z+' — это зомби.\n\n");
 
   for (int i = 0; i < n; i++) {
