@@ -137,7 +137,7 @@ static void *RunJob(void *arg) { //принимает в себя структу
     return NULL;
   }
 
-  int sck = socket(AF_INET, SOCK_STREAM, 0); //ipv4, формат передачи данных tcp(пакетами)
+  int sck = socket(AF_INET, SOCK_STREAM, 0); //ipv4, SOCK_STREAM означает потоковый сокет, а для IPv4 это TCP
   if (sck < 0) {
     fprintf(stderr, "Socket creation failed!\n");
     return NULL;

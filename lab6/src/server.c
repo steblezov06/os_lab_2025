@@ -40,7 +40,7 @@ void *ThreadFactorial(void *args) { //обёртка передаёт струк
   return (void *)(uintptr_t)Factorial(fargs);
 }
 
-// Читает ровно len байт (TCP может отдать данные частями). то же что 
+// Читает ровно len байт (TCP может отдать данные частями). то же что и в клиенте
 static bool RecvAll(int fd, char *buf, size_t len) {
   size_t got = 0;
   while (got < len) {
@@ -117,8 +117,6 @@ int main(int argc, char **argv) {
   server.sin_port = htons((uint16_t)port);// порт
   server.sin_addr.s_addr = htonl(INADDR_ANY); //адрес сдесь 0.0.0.0 (слушать все адреса) можно и 127.0.0.1
 
-  int opt_val = 1;
-  setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val)); //узнаю подробнее 
 
   int err = bind(server_fd, (struct sockaddr *)&server, sizeof(server)); //привязываем наши адрес и пори из структуры к сокету
   if (err < 0) {
@@ -126,7 +124,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  err = listen(server_fd, 128); //Переводит сокет в режим пассивного ожидания(ждём connect от клиента)
+  err = listen(server_fd, 128); //Переводит сокет в режим ожидания(ждём connect от клиента)
   if (err < 0) {
     fprintf(stderr, "Could not listen on socket\n");
     return 1;
@@ -137,7 +135,7 @@ int main(int argc, char **argv) {
   while (true) {  //Цикл обслуживания клиента
     struct sockaddr_in client;
     socklen_t client_len = sizeof(client);
-    int client_fd = accept(server_fd, (struct sockaddr *)&client, &client_len); //accept блокируется, пока в очереди нет готового соединенияпотом вынимает его и возвращает новый дескриптор client_fd
+    int client_fd = accept(server_fd, (struct sockaddr *)&client, &client_len); 
    //server_fd продолжает слушать и принимать новых клиентов.
    //client_fd — отдельный канал именно с этим клиентом: через него идут recv и send
     if (client_fd < 0) {
@@ -220,8 +218,8 @@ int main(int argc, char **argv) {
       }
     }
 
-    shutdown(client_fd, SHUT_RDWR); //управляет соединением. Он говорит TCP, что передача в указанном направлении прекращается
-    close(client_fd); //SHUT_RDWR: с этим клиентом мы закончили полностью, и ничего больше ни слать, ни принимать не собираемся
+    shutdown(client_fd, SHUT_RDWR); //управляет соединением. Он говорит TCP, что передача в указанном направлении прекращается(в обе стороны)
+    close(client_fd); //освобождает дескриптор, ядро завершает соединение
   }
 
   return 0;
