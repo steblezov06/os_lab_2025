@@ -9,21 +9,35 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define SERV_PORT 20001
-#define BUFSIZE 1024
+//#define SERV_PORT 20001
+//#define BUFSIZE 1024
 #define SADDR struct sockaddr
 #define SLEN sizeof(struct sockaddr_in)
 
 int main(int argc, char **argv) {
+
+  if (argc >4 ) {
+    printf("usage: client <IPaddress of server>\n");
+    exit(1);
+  }
+
+
+  int SERV_PORT = atoi(argv[2]);
+    if (SERV_PORT <= 0  || SERV_PORT > 65536) {
+            fprintf(stderr, "port in not correct\n");
+            return 1;}
+
+  int BUFSIZE;
+  BUFSIZE = atoi(argv[3]);
+  if (BUFSIZE <= 0) {
+            fprintf(stderr, "buf must be positive\n");
+            return 1;}
+
+
   int sockfd, n;
   char sendline[BUFSIZE], recvline[BUFSIZE + 1];
   struct sockaddr_in servaddr;
   struct sockaddr_in cliaddr;
-
-  if (argc != 2) {
-    printf("usage: client <IPaddress of server>\n");
-    exit(1);
-  }
 
   memset(&servaddr, 0, sizeof(servaddr));
   servaddr.sin_family = AF_INET;

@@ -8,12 +8,31 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define SERV_PORT 20001
-#define BUFSIZE 1024
+//#define SERV_PORT 20001
+//#define BUFSIZE 1024
 #define SADDR struct sockaddr
 #define SLEN sizeof(struct sockaddr_in)
 
-int main() {
+int main(int argc, char **argv) {
+
+  if (argc >3 ) {
+    printf("num of arguments\n");
+    exit(1);
+  }
+
+
+  int SERV_PORT = atoi(argv[1]);
+    if (SERV_PORT <= 0  || SERV_PORT > 65536) {
+            fprintf(stderr, "port in not correct\n");
+            return 1;}
+
+  int BUFSIZE;
+  BUFSIZE = atoi(argv[2]);
+  if (BUFSIZE <= 0) {
+            fprintf(stderr, "buf must be positive\n");
+            return 1;}
+
+
   int sockfd, n;
   char mesg[BUFSIZE], ipadr[16];
   struct sockaddr_in servaddr;

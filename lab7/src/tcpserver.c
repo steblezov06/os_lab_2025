@@ -7,18 +7,28 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define SERV_PORT 10050
-#define BUFSIZE 100
+
 #define SADDR struct sockaddr
 
-int main() {
+int main(int argc, char *argv[]) {
   const size_t kSize = sizeof(struct sockaddr_in);
+
+  if (argc < 3) {
+      printf("Too few arguments \n");
+      exit(1);
+    }
+
 
   int lfd, cfd;
   int nread;
-  char buf[BUFSIZE];
   struct sockaddr_in servaddr;
   struct sockaddr_in cliaddr;
+
+  int SERV_PORT = atoi(argv[1]);
+  if (SERV_PORT <= 0  || SERV_PORT > 65536) {
+          fprintf(stderr, "port in not correct\n");
+          return 1;}
+
 
   if ((lfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     perror("socket");
@@ -39,6 +49,16 @@ int main() {
     perror("listen");
     exit(1);
   }
+
+
+  int BUFSIZE;
+  BUFSIZE = atoi(argv[2]);
+  if (BUFSIZE <= 0) {
+            fprintf(stderr, "buf must be positive\n");
+            return 1;}
+  char buf[BUFSIZE];
+
+
 
   while (1) {
     unsigned int clilen = kSize;
