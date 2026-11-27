@@ -50,9 +50,8 @@ bool ConvertStringToUI64(const char *str, uint64_t *val) {
   return true;
 }
 
-static bool RecvAll(int fd, char *buf, size_t len) { //TCP — это поток байт, а не набор сообщений.
-  // Если сервер отправил 8 байт, это не гарантирует, 
-  // что один recv вернёт все 8. Он может вернуть 3, а остальные 5 придут позже. Поэтому читаем в цикле, пока не наберём len байт.
+static bool RecvAll(int fd, char *buf, size_t len) { 
+  
   size_t got = 0;
   while (got < len) {
     ssize_t r = recv(fd, buf + got, len - got, 0);
