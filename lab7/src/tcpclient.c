@@ -20,7 +20,11 @@ int main(int argc, char *argv[]) {
     printf("Too few arguments \n");
     exit(1);
   }
-
+  int BUFSIZE;
+  BUFSIZE = atoi(argv[3]);
+  if (BUFSIZE <= 0) {
+          fprintf(stderr, "buf must be positive\n");
+          return 1;}
   if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     perror("socket creating");
     exit(1);
@@ -43,11 +47,6 @@ int main(int argc, char *argv[]) {
 
   write(1, "Input message to send\n", 22);
 
-  int BUFSIZE;
-  BUFSIZE = atoi(argv[3]);
-  if (BUFSIZE <= 0) {
-          fprintf(stderr, "buf must be positive\n");
-          return 1;}
   char buf[BUFSIZE];
   while ((nread = read(0, buf, BUFSIZE)) > 0) {
     if (write(fd, buf, nread) < 0) {

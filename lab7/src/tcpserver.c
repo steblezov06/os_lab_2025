@@ -30,6 +30,13 @@ int main(int argc, char *argv[]) {
           return 1;}
 
 
+  int BUFSIZE;
+  BUFSIZE = atoi(argv[2]);
+  if (BUFSIZE <= 0) {
+            fprintf(stderr, "buf must be positive\n");
+            return 1;}
+
+
   if ((lfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     perror("socket");
     exit(1);
@@ -50,12 +57,6 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-
-  int BUFSIZE;
-  BUFSIZE = atoi(argv[2]);
-  if (BUFSIZE <= 0) {
-            fprintf(stderr, "buf must be positive\n");
-            return 1;}
   char buf[BUFSIZE];
 
 
